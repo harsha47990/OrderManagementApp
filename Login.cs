@@ -21,7 +21,9 @@ namespace OrderManagementApp
         public Login()
         {
             InitializeComponent();
-
+            MasterPage mf = new MasterPage();
+            //Form1 mf =      new Form1();
+            mf.ShowDialog();    
         }
 
         private void button_login_Click(object sender, EventArgs e)
@@ -62,6 +64,9 @@ namespace OrderManagementApp
                             {
                                 CodeConfig.admin_login = false;
                             }
+                            //this.Close();
+                            Form1 f1 = new Form1(); 
+                            f1.ShowDialog();    
                             return;
                         }
                         else

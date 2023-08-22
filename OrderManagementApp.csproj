@@ -74,6 +74,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AddProcess.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="AddProcess.Designer.cs">
+      <DependentUpon>AddProcess.cs</DependentUpon>
+    </Compile>
     <Compile Include="CodeConfig.cs" />
     <Compile Include="create_user.cs">
       <SubType>Form</SubType>
@@ -81,19 +87,67 @@
     <Compile Include="create_user.Designer.cs">
       <DependentUpon>create_user.cs</DependentUpon>
     </Compile>
+    <Compile Include="EditStepForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EditStepForm.Designer.cs">
+      <DependentUpon>EditStepForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form1.Designer.cs">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </Compile>
     <Compile Include="Login.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Login.Designer.cs">
       <DependentUpon>Login.cs</DependentUpon>
     </Compile>
+    <Compile Include="MasterPage.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MasterPage.Designer.cs">
+      <DependentUpon>MasterPage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="AddProcessUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="AddProcessUserControl.Designer.cs">
+      <DependentUpon>AddProcessUserControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="OrderPlacingControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="OrderPlacingControl.Designer.cs">
+      <DependentUpon>OrderPlacingControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ProgressUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ProgressUserControl.Designer.cs">
+      <DependentUpon>ProgressUserControl.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="AddProcess.resx">
+      <DependentUpon>AddProcess.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="create_user.resx">
       <DependentUpon>create_user.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Login.resx">
       <DependentUpon>Login.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MasterPage.resx">
+      <DependentUpon>MasterPage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AddProcessUserControl.resx">
+      <DependentUpon>AddProcessUserControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OrderPlacingControl.resx">
+      <DependentUpon>OrderPlacingControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -104,6 +158,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="ProgressUserControl.resx">
+      <DependentUpon>ProgressUserControl.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

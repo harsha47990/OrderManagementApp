@@ -30,3 +30,8 @@ C:\Users\harsh\source\repos\OrderManagementApp\obj\Debug\OrderManagementApp.exe
 C:\Users\harsh\source\repos\OrderManagementApp\obj\Debug\OrderManagementApp.pdb
 C:\Users\harsh\source\repos\OrderManagementApp\obj\Debug\OrderManagementApp.create_user.resources
 C:\Users\harsh\source\repos\OrderManagementApp\obj\Debug\OrderManagementApp.Login.resources
+C:\Users\harsh\source\repos\OrderManagementApp\obj\Debug\OrderManagementApp.MasterPage.resources
+C:\Users\harsh\source\repos\OrderManagementApp\obj\Debug\OrderManagementApp.ProgressUserControl.resources
+C:\Users\harsh\source\repos\OrderManagementApp\obj\Debug\OrderManagementApp.AddProcess.resources
+C:\Users\harsh\source\repos\OrderManagementApp\obj\Debug\OrderManagementApp.AddProcessUserControl.resources
+C:\Users\harsh\source\repos\OrderManagementApp\obj\Debug\OrderManagementApp.OrderPlacingControl.resources
