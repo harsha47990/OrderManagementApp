@@ -10,9 +10,9 @@ using System.Windows.Forms;
 
 namespace OrderManagementApp
 {
-    public partial class AddProcess : UserControl
+    public partial class PurchaseUserControl : UserControl
     {
-        public AddProcess()
+        public PurchaseUserControl()
         {
             InitializeComponent();
         }

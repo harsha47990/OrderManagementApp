@@ -65,9 +65,9 @@ namespace OrderManagementApp
                                 CodeConfig.admin_login = false;
                             }
                             //this.Close();
-                            Form1 f1 = new Form1(); 
-                            f1.ShowDialog();    
-                            return;
+                            //Form1 f1 = new Form1(); 
+                           // f1.ShowDialog();    
+                           // return;
                         }
                         else
                         {

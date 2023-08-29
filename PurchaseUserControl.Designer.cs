@@ -1,6 +1,6 @@
 ﻿namespace OrderManagementApp
 {
-    partial class AddProcess
+    partial class PurchaseUserControl
     {
         /// <summary> 
         /// Required designer variable.
@@ -28,17 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.SuspendLayout();
-            // 
-            // AddProcess
-            // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
+            components = new System.ComponentModel.Container();
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.Name = "AddProcess";
-            this.Size = new System.Drawing.Size(992, 520);
-            this.ResumeLayout(false);
-
         }
 
         #endregion

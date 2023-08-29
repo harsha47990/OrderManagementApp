@@ -45,6 +45,8 @@
             this.setting_subtab = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.Settings_process_config = new System.Windows.Forms.TabPage();
+            this.settings_customer_panel = new System.Windows.Forms.TabPage();
+            this.settings_products_panel = new System.Windows.Forms.TabPage();
             this.tabcontrol.SuspendLayout();
             this.progress_tab.SuspendLayout();
             this.progress_option_panel.SuspendLayout();
@@ -66,6 +68,7 @@
             this.tabcontrol.SelectedIndex = 0;
             this.tabcontrol.Size = new System.Drawing.Size(1896, 678);
             this.tabcontrol.TabIndex = 0;
+            this.tabcontrol.SelectedIndexChanged += new System.EventHandler(this.tabcontrol_SelectedIndexChanged);
             // 
             // progress_tab
             // 
@@ -221,6 +224,8 @@
             // 
             this.setting_subtab.Controls.Add(this.tabPage1);
             this.setting_subtab.Controls.Add(this.Settings_process_config);
+            this.setting_subtab.Controls.Add(this.settings_customer_panel);
+            this.setting_subtab.Controls.Add(this.settings_products_panel);
             this.setting_subtab.Dock = System.Windows.Forms.DockStyle.Fill;
             this.setting_subtab.Location = new System.Drawing.Point(3, 3);
             this.setting_subtab.Name = "setting_subtab";
@@ -248,6 +253,27 @@
             this.Settings_process_config.TabIndex = 1;
             this.Settings_process_config.Text = "process config";
             this.Settings_process_config.UseVisualStyleBackColor = true;
+            // 
+            // settings_customer_panel
+            // 
+            this.settings_customer_panel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.settings_customer_panel.Location = new System.Drawing.Point(4, 41);
+            this.settings_customer_panel.Name = "settings_customer_panel";
+            this.settings_customer_panel.Padding = new System.Windows.Forms.Padding(3);
+            this.settings_customer_panel.Size = new System.Drawing.Size(1874, 582);
+            this.settings_customer_panel.TabIndex = 2;
+            this.settings_customer_panel.Text = "customers";
+            this.settings_customer_panel.UseVisualStyleBackColor = true;
+            // 
+            // settings_products_panel
+            // 
+            this.settings_products_panel.Location = new System.Drawing.Point(4, 41);
+            this.settings_products_panel.Name = "settings_products_panel";
+            this.settings_products_panel.Padding = new System.Windows.Forms.Padding(3);
+            this.settings_products_panel.Size = new System.Drawing.Size(1874, 582);
+            this.settings_products_panel.TabIndex = 3;
+            this.settings_products_panel.Text = "products";
+            this.settings_products_panel.UseVisualStyleBackColor = true;
             // 
             // MasterPage
             // 
@@ -292,5 +318,7 @@
         private System.Windows.Forms.TabControl setting_subtab;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabPage Settings_process_config;
+        private System.Windows.Forms.TabPage settings_customer_panel;
+        private System.Windows.Forms.TabPage settings_products_panel;
     }
 }

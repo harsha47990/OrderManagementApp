@@ -74,12 +74,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AddProcess.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="AddProcess.Designer.cs">
-      <DependentUpon>AddProcess.cs</DependentUpon>
-    </Compile>
     <Compile Include="CodeConfig.cs" />
     <Compile Include="create_user.cs">
       <SubType>Form</SubType>
@@ -87,17 +81,11 @@
     <Compile Include="create_user.Designer.cs">
       <DependentUpon>create_user.cs</DependentUpon>
     </Compile>
-    <Compile Include="EditStepForm.cs">
-      <SubType>Form</SubType>
+    <Compile Include="CustomDataGridViewUserControl.cs">
+      <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="EditStepForm.Designer.cs">
-      <DependentUpon>EditStepForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Form1.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="CustomDataGridViewUserControl.Designer.cs">
+      <DependentUpon>CustomDataGridViewUserControl.cs</DependentUpon>
     </Compile>
     <Compile Include="Login.cs">
       <SubType>Form</SubType>
@@ -131,11 +119,29 @@
     <Compile Include="ProgressUserControl.Designer.cs">
       <DependentUpon>ProgressUserControl.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="AddProcess.resx">
-      <DependentUpon>AddProcess.cs</DependentUpon>
-    </EmbeddedResource>
+    <Compile Include="PurchaseUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="PurchaseUserControl.Designer.cs">
+      <DependentUpon>PurchaseUserControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Settings_CustomerUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Settings_CustomerUserControl.Designer.cs">
+      <DependentUpon>Settings_CustomerUserControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Settings_ProductsUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Settings_ProductsUserControl.Designer.cs">
+      <DependentUpon>Settings_ProductsUserControl.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="create_user.resx">
       <DependentUpon>create_user.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CustomDataGridViewUserControl.resx">
+      <DependentUpon>CustomDataGridViewUserControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Login.resx">
       <DependentUpon>Login.cs</DependentUpon>
@@ -160,6 +166,12 @@
     </Compile>
     <EmbeddedResource Include="ProgressUserControl.resx">
       <DependentUpon>ProgressUserControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Settings_CustomerUserControl.resx">
+      <DependentUpon>Settings_CustomerUserControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Settings_ProductsUserControl.resx">
+      <DependentUpon>Settings_ProductsUserControl.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

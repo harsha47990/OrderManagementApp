@@ -20,6 +20,11 @@ namespace OrderManagementApp
             AddProcessUserControl f2 = new AddProcessUserControl(); 
 
             OrderPlacingControl f3 = new OrderPlacingControl(); 
+
+            Settings_ProductsUserControl f4 = new Settings_ProductsUserControl();
+
+            Settings_CustomerUserControl f5 = new Settings_CustomerUserControl();
+
             //f1.TopLevel = false;
             this.WindowState = FormWindowState.Maximized;
             this.MaximizeBox = false; // Disables minimize button
@@ -32,9 +37,39 @@ namespace OrderManagementApp
             progress_fill_panel.Controls.Add(f1);
             Settings_process_config.Controls.Add(f2);
             order_panel.Controls.Add(f3);
-
+            settings_products_panel.Controls.Add(f4);
+            settings_customer_panel.Controls.Add(f5);
             // Show the form
             f1.Show();
         }
+
+        private void tabcontrol_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            TabControl tabControl = (TabControl)sender;
+
+            if (tabControl.SelectedIndex >= 0)
+            {
+                TabPage selectedTab = tabControl.TabPages[tabControl.SelectedIndex];
+                LoadDataForTab(selectedTab);
+            }
+        }
+
+        private void LoadDataForTab(TabPage tab)
+        {
+            // Clear existing content or refresh data here
+            // For demonstration purposes, let's update a label's text
+            UserControl userControl = tab.Controls[0] as UserControl;
+
+            if (userControl != null && userControl is IRefreshable)
+            {
+                ((IRefreshable)userControl).RefreshData();
+            }
+        }
+
+        public interface IRefreshable
+        {
+            void RefreshData();
+        }
     }
+
 }

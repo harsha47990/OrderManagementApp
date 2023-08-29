@@ -3,33 +3,39 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
+using System.Text.Json;
 using System.Windows.Forms;
+using static OrderManagementApp.MasterPage;
 
 namespace OrderManagementApp
 {
-    public partial class OrderPlacingControl : UserControl
+    public partial class OrderPlacingControl : UserControl, IRefreshable
     {
-        // Data source for customer names auto-completion
         private AutoCompleteStringCollection customerNameAutoComplete, OrderItemsAutoComplete;
 
-        // List of available items
-        private List<OrderItemClass> availableItems;
+        private List<ProductItem> availableItems;
 
-        // List to hold the items in the order
         private BindingList<OrderedItem> orderItems;
+        
+        private List<string> CustomerNames;
 
+        private List<ProcessClass> processes = new List<ProcessClass>();
+
+        Dictionary<string, double> custom_price_dict;
+
+        List<CustomerData> customers;
+
+        CustomerData selected_customer;
+
+        bool IsCustomPrice = false;
         public OrderPlacingControl()
         {
             InitializeComponent();
-            InitializeControls();
-        }
-
-        private void InitializeControls()
-        {
+            combo_customer_type.Items.Add(CodeConfig.string_Studio);
+            combo_customer_type.Items.Add(CodeConfig.string_Amature);
             // Initialize customer name auto-completion data source
             customerNameAutoComplete = new AutoCompleteStringCollection();
             OrderItemsAutoComplete = new AutoCompleteStringCollection();
-
 
             txtAvailableItems.AutoCompleteMode = AutoCompleteMode.Suggest;
             txtAvailableItems.AutoCompleteSource = AutoCompleteSource.CustomSource;
@@ -39,32 +45,30 @@ namespace OrderManagementApp
             textBoxCustomerName.AutoCompleteSource = AutoCompleteSource.CustomSource;
             textBoxCustomerName.AutoCompleteCustomSource = customerNameAutoComplete;
 
-            
+            combo_paymenttype.Items.AddRange(CodeConfig.PaymentTypes.ToArray());
 
-            // Initialize the list of available items (you can load this from a database or other sources)
-            availableItems = new List<OrderItemClass>
-            {
-                new OrderItemClass { Name = "Item 1", Price = 10.0, AvailableQuantity=100 },
-                new OrderItemClass { Name = "Item 2", Price = 25.0, AvailableQuantity=100 },
-                new OrderItemClass { Name = "cat 1", Price = 33.0, AvailableQuantity=100 },
-                new OrderItemClass { Name = "cow 2", Price = 45.0, AvailableQuantity=100 },
-                new OrderItemClass { Name = "deep 1", Price = 50.0, AvailableQuantity=100 },
-                new OrderItemClass { Name = "donkey 2", Price = 65.0, AvailableQuantity=100 },
-                // Add more items as needed
-            };
-
-            List<string> customers = new List<string>(new string[] { "customer1", "customer2", "customer3","amature" });
-
-            SetCustomerNamesAutoComplete(customers);
-            SetOrderItemsAutoComplete(availableItems);
-            comboBoxAvailableItems.DataSource = availableItems;
+            combo_paymenttype.SelectedIndex = 0;
             // Initialize the list to hold the items in the order
             orderItems = new BindingList<OrderedItem>();
             dataGridViewOrderItems.DataSource = orderItems;
+            txt_total_amount.Text = "0";
+            txt_amountPaid.Text = "0";
+            processes = Utils.ReadProcesses();
+            dataGridViewOrderItems.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            combobox_process_type.Items.AddRange(processes.Select(obj => obj.Name).ToArray());
 
+            RefreshData();
         }
-        
-        public void SetOrderItemsAutoComplete(List<OrderItemClass> Items)
+        private void LoadNeccesaryDetailsForCustomer()
+        {
+            // Initialize the list of available items (you can load this from a database or other sources)
+            
+            availableItems = Utils.LoadProducts().FindAll(obj => obj.Group == combo_customer_type.Text);
+            SetOrderItemsAutoComplete(availableItems);
+            comboBoxAvailableItems.DataSource = availableItems;
+            comboBoxAvailableItems.SelectedIndex = -1;
+        }
+        public void SetOrderItemsAutoComplete(List<ProductItem> Items)
         {
             List<string> items = new List<string>();
             foreach(var item in Items)
@@ -76,29 +80,33 @@ namespace OrderManagementApp
 
         }
 
-        // Method to populate the customer name auto-completion data
         public void SetCustomerNamesAutoComplete(List<string> customerNames)
         {
             customerNameAutoComplete.Clear();
             customerNameAutoComplete.AddRange(customerNames.ToArray());
         }
 
-        // Event handler for selecting an item from the available items list
         private void comboBoxAvailableItems_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (comboBoxAvailableItems.SelectedItem != null)
             {
-                OrderItemClass selectedItem = (OrderItemClass)comboBoxAvailableItems.SelectedItem;
-                textBoxPrice.Text = selectedItem.Price.ToString("0.00");
+                ProductItem selectedItem = (ProductItem)comboBoxAvailableItems.SelectedItem;
+                if (IsCustomPrice && custom_price_dict.ContainsKey(selectedItem.Name))
+                {
+                    textBoxPrice.Text = custom_price_dict[selectedItem.Name].ToString("0.00");
+                }
+                else
+                {
+                    textBoxPrice.Text = selectedItem.Price.ToString("0.00");
+                }
             }
         }
 
-        // Event handler for adding the selected item to the order
         private void buttonAddToOrder_Click(object sender, EventArgs e)
         {
             if (comboBoxAvailableItems.SelectedItem != null && numericUpDownQuantity.Value > 0)
             {
-                OrderItemClass selectedItem = (OrderItemClass)comboBoxAvailableItems.SelectedItem;
+                ProductItem selectedItem = (ProductItem)comboBoxAvailableItems.SelectedItem;
                 double price = double.Parse(textBoxPrice.Text);
                 int quantity = (int)numericUpDownQuantity.Value;
 
@@ -111,16 +119,57 @@ namespace OrderManagementApp
                 };
 
                 orderItems.Add(orderItem);
+                txt_total_amount.Text = Convert.ToString(Convert.ToDouble(txt_total_amount.Text) + orderItem.Total_Price);
             }
         }
 
         // Event handler for saving the order
         private void buttonSaveOrder_Click(object sender, EventArgs e)
         {
-            // Implement the logic to save the order here
-            // You can use the orderItems list to get the items in the order
-            // and textBoxCustomerName.Text to get the customer name.
-            // Save the data to a database or any other storage as needed.
+            DateTime currentTime = DateTime.Now;
+            string id = currentTime.ToString("yyyyMMddHHmmssfff");
+            Order order_item = new Order();
+            order_item.ID = id;
+            order_item.ProcessType = combobox_process_type.SelectedItem.ToString();
+            order_item.CustomerId = selected_customer.ID;
+            order_item.Comments = txt_comments.Text;
+            order_item.Items = orderItems.ToList();
+            order_item.TotalAmount = Convert.ToDouble(txt_total_amount.Text);
+            order_item.Due = order_item.TotalAmount - Convert.ToDouble(txt_amountPaid.Text);
+            order_item.PaymentType = combo_paymenttype.SelectedItem.ToString();
+            Utils.SaveOrderDetails(order_item);
+
+        }
+
+        private void textBoxCustomerName_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                if (CustomerNames.Contains(textBoxCustomerName.Text.ToString(), StringComparer.OrdinalIgnoreCase))
+                {
+                    string name = textBoxCustomerName.Text.ToString().Split(',')[0];
+                    string type = textBoxCustomerName.Text.ToString().Split(',')[1];
+                    string studio_name = textBoxCustomerName.Text.ToString().Split(',')[2];
+                    string address = textBoxCustomerName.Text.ToString().Split(',')[3];
+                    string mobile = textBoxCustomerName.Text.ToString().Split(',')[4];
+                    selected_customer = customers.Find(obj => obj.Name == name && obj.CustomerType == type && obj.StudioName == studio_name && obj.Address == address && obj.MobileNo == mobile);
+                    textBoxCustomerName.Text = selected_customer.Name;
+                    combo_customer_type.Text = selected_customer.CustomerType;
+
+                    if (selected_customer.CustomPriceList.Count > 0)
+                    {
+                        IsCustomPrice = true;
+                        custom_price_dict = selected_customer.CustomPriceList;
+                    }
+                    else
+                    {
+                        custom_price_dict = null;
+                        IsCustomPrice = false;
+                    }
+                    LoadNeccesaryDetailsForCustomer();
+                }
+               
+            }
         }
 
         private void txtAvailableItems_TextChanged(object sender, EventArgs e)
@@ -135,30 +184,27 @@ namespace OrderManagementApp
             //MessageBox.Show(searchText);
         }
 
-        private void OrderPlacingControl_Load(object sender, EventArgs e)
+        private void combo_customer_type_SelectedIndexChanged(object sender, EventArgs e)
         {
+            LoadNeccesaryDetailsForCustomer();
+        }
 
+        private void dataGridViewOrderItems_UserDeletingRow(object sender, DataGridViewRowCancelEventArgs e)
+        {
+            int ind = e.Row.Index;
+            var deleted_item = orderItems[ind];
+            //orderItems.Remove(deleted_item);
+            txt_total_amount.Text = Convert.ToString(Convert.ToDouble(txt_total_amount.Text) - deleted_item.Total_Price);
+
+        }
+
+        public void RefreshData()
+        {
+            custom_price_dict = new Dictionary<string, double>();
+            customers = Utils.LoadCustomers();
+            CustomerNames = customers.Select(obj => obj.Name + "," + obj.CustomerType + ',' + obj.StudioName + "," + obj.Address + "," + obj.MobileNo).ToList();
+            SetCustomerNamesAutoComplete(CustomerNames);
         }
     }
 
-    public class OrderItemClass
-    {
-        public string Name { get; set; }
-        public double Price { get; set; }
-
-        public int AvailableQuantity { get; set; }
-
-        public override string ToString()
-        {
-            return Name;
-        }
-    }
-
-    public class OrderedItem
-    {
-        public string ItemName { get; set; }
-        public double Price { get; set; }
-        public int Quantity { get; set; }
-        public double Total_Price { get; set; }  
-    }
 }

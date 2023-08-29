@@ -32,6 +32,8 @@ C:\Users\harsh\source\repos\OrderManagementApp\obj\Debug\OrderManagementApp.crea
 C:\Users\harsh\source\repos\OrderManagementApp\obj\Debug\OrderManagementApp.Login.resources
 C:\Users\harsh\source\repos\OrderManagementApp\obj\Debug\OrderManagementApp.MasterPage.resources
 C:\Users\harsh\source\repos\OrderManagementApp\obj\Debug\OrderManagementApp.ProgressUserControl.resources
-C:\Users\harsh\source\repos\OrderManagementApp\obj\Debug\OrderManagementApp.AddProcess.resources
 C:\Users\harsh\source\repos\OrderManagementApp\obj\Debug\OrderManagementApp.AddProcessUserControl.resources
 C:\Users\harsh\source\repos\OrderManagementApp\obj\Debug\OrderManagementApp.OrderPlacingControl.resources
+C:\Users\harsh\source\repos\OrderManagementApp\obj\Debug\OrderManagementApp.Settings_ProductsUserControl.resources
+C:\Users\harsh\source\repos\OrderManagementApp\obj\Debug\OrderManagementApp.Settings_CustomerUserControl.resources
+C:\Users\harsh\source\repos\OrderManagementApp\obj\Debug\OrderManagementApp.CustomDataGridViewUserControl.resources

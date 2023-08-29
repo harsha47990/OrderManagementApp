@@ -79,12 +79,9 @@ namespace OrderManagementApp
         }
         private void ReadProcesses()
         {
-            string filePath = CodeConfig.process_json_path;
-            if (File.Exists(filePath))
+            List<ProcessClass> processes = Utils.ReadProcesses();
+            if (processes != null)
             {
-                string jsonString = File.ReadAllText(filePath);
-                List<ProcessClass> processes = JsonSerializer.Deserialize<List<ProcessClass>>(jsonString);
-
                 foreach (ProcessClass process in processes)
                 {
                     ProcessNames.Add(process.Name);
@@ -243,8 +240,6 @@ namespace OrderManagementApp
             {
                 btnAddStep.PerformClick();
             }
-
-
         }
     }
 
