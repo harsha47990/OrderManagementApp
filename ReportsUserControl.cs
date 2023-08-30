@@ -11,12 +11,13 @@ using static OrderManagementApp.MasterPage;
 
 namespace OrderManagementApp
 {
-    public partial class PurchaseUserControl : UserControl, IRefreshable
+    public partial class ReportsUserControl : UserControl, IRefreshable
     {
-        public PurchaseUserControl()
+        public ReportsUserControl()
         {
             InitializeComponent();
         }
+
         public void RefreshData()
         {
 

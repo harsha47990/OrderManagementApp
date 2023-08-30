@@ -15,7 +15,7 @@ namespace OrderManagementApp
 
         private List<ProductItem> availableItems;
 
-        private BindingList<OrderedItem> orderItems;
+        private BindingList<OrderedItem> orderItems = new BindingList<OrderedItem>();
         
         private List<string> CustomerNames;
 
@@ -44,21 +44,30 @@ namespace OrderManagementApp
             textBoxCustomerName.AutoCompleteMode = AutoCompleteMode.Suggest;
             textBoxCustomerName.AutoCompleteSource = AutoCompleteSource.CustomSource;
             textBoxCustomerName.AutoCompleteCustomSource = customerNameAutoComplete;
-
             combo_paymenttype.Items.AddRange(CodeConfig.PaymentTypes.ToArray());
-
-            combo_paymenttype.SelectedIndex = 0;
-            // Initialize the list to hold the items in the order
-            orderItems = new BindingList<OrderedItem>();
+           
             dataGridViewOrderItems.DataSource = orderItems;
-            txt_total_amount.Text = "0";
-            txt_amountPaid.Text = "0";
-            processes = Utils.ReadProcesses();
             dataGridViewOrderItems.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            processes = Utils.ReadProcesses();
             combobox_process_type.Items.AddRange(processes.Select(obj => obj.Name).ToArray());
-
+            CleanAll();
             RefreshData();
         }
+
+        private void CleanAll()
+        {
+            orderItems.Clear();
+            txt_total_amount.Text = "0";
+            txt_amountPaid.Text = "0";
+            textBoxCustomerName.Text = String.Empty;
+            combo_customer_type.SelectedIndex = 0;
+            combobox_process_type.SelectedIndex= 0;
+            txt_comments.Text = String.Empty;
+            textBoxPrice.Text = String.Empty;
+            numericUpDownQuantity.Value = 1;
+            combo_paymenttype.SelectedIndex= 0;
+        }
+
         private void LoadNeccesaryDetailsForCustomer()
         {
             // Initialize the list of available items (you can load this from a database or other sources)
@@ -138,7 +147,7 @@ namespace OrderManagementApp
             order_item.Due = order_item.TotalAmount - Convert.ToDouble(txt_amountPaid.Text);
             order_item.PaymentType = combo_paymenttype.SelectedItem.ToString();
             Utils.SaveOrderDetails(order_item);
-
+            CleanAll();
         }
 
         private void textBoxCustomerName_KeyDown(object sender, KeyEventArgs e)

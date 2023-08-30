@@ -24,6 +24,8 @@ namespace OrderManagementApp
             Settings_ProductsUserControl f4 = new Settings_ProductsUserControl();
 
             Settings_CustomerUserControl f5 = new Settings_CustomerUserControl();
+            PurchaseUserControl f6 = new PurchaseUserControl();
+            ReportsUserControl f7 = new ReportsUserControl();   
 
             //f1.TopLevel = false;
             this.WindowState = FormWindowState.Maximized;
@@ -32,13 +34,15 @@ namespace OrderManagementApp
             // Set the Dock property to fill the panel
             f1.Dock = DockStyle.Fill;
 
-            // Add MyWinFormPage to the panel's Controls collection
-            
+
             progress_fill_panel.Controls.Add(f1);
             Settings_process_config.Controls.Add(f2);
             order_panel.Controls.Add(f3);
             settings_products_panel.Controls.Add(f4);
             settings_customer_panel.Controls.Add(f5);
+            purchase_tab.Controls.Add(f6);
+            reports_tab.Controls.Add(f7);
+
             // Show the form
             f1.Show();
         }

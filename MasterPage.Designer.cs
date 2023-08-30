@@ -39,8 +39,8 @@
             this.button1 = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.order_panel = new System.Windows.Forms.TabPage();
-            this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.purchase_tab = new System.Windows.Forms.TabPage();
+            this.reports_tab = new System.Windows.Forms.TabPage();
             this.tabPage5 = new System.Windows.Forms.TabPage();
             this.setting_subtab = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
@@ -58,8 +58,8 @@
             // 
             this.tabcontrol.Controls.Add(this.progress_tab);
             this.tabcontrol.Controls.Add(this.order_panel);
-            this.tabcontrol.Controls.Add(this.tabPage3);
-            this.tabcontrol.Controls.Add(this.tabPage4);
+            this.tabcontrol.Controls.Add(this.purchase_tab);
+            this.tabcontrol.Controls.Add(this.reports_tab);
             this.tabcontrol.Controls.Add(this.tabPage5);
             this.tabcontrol.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabcontrol.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -189,25 +189,25 @@
             this.order_panel.Text = "orders";
             this.order_panel.UseVisualStyleBackColor = true;
             // 
-            // tabPage3
+            // purchase_tab
             // 
-            this.tabPage3.Location = new System.Drawing.Point(4, 41);
-            this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(1888, 633);
-            this.tabPage3.TabIndex = 2;
-            this.tabPage3.Text = "purchases";
-            this.tabPage3.UseVisualStyleBackColor = true;
+            this.purchase_tab.Location = new System.Drawing.Point(4, 41);
+            this.purchase_tab.Name = "purchase_tab";
+            this.purchase_tab.Padding = new System.Windows.Forms.Padding(3);
+            this.purchase_tab.Size = new System.Drawing.Size(1888, 633);
+            this.purchase_tab.TabIndex = 2;
+            this.purchase_tab.Text = "purchases";
+            this.purchase_tab.UseVisualStyleBackColor = true;
             // 
-            // tabPage4
+            // reports_tab
             // 
-            this.tabPage4.Location = new System.Drawing.Point(4, 41);
-            this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(1888, 633);
-            this.tabPage4.TabIndex = 3;
-            this.tabPage4.Text = "reports";
-            this.tabPage4.UseVisualStyleBackColor = true;
+            this.reports_tab.Location = new System.Drawing.Point(4, 41);
+            this.reports_tab.Name = "reports_tab";
+            this.reports_tab.Padding = new System.Windows.Forms.Padding(3);
+            this.reports_tab.Size = new System.Drawing.Size(1888, 633);
+            this.reports_tab.TabIndex = 3;
+            this.reports_tab.Text = "reports";
+            this.reports_tab.UseVisualStyleBackColor = true;
             // 
             // tabPage5
             // 
@@ -304,8 +304,8 @@
         private System.Windows.Forms.TabControl tabcontrol;
         private System.Windows.Forms.TabPage progress_tab;
         private System.Windows.Forms.TabPage order_panel;
-        private System.Windows.Forms.TabPage tabPage3;
-        private System.Windows.Forms.TabPage tabPage4;
+        private System.Windows.Forms.TabPage purchase_tab;
+        private System.Windows.Forms.TabPage reports_tab;
         private System.Windows.Forms.TabPage tabPage5;
         private System.Windows.Forms.Panel progress_option_panel;
         private System.Windows.Forms.Button button1;

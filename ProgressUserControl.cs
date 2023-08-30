@@ -8,10 +8,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static OrderManagementApp.MasterPage;
 
 namespace OrderManagementApp
 {
-    public partial class ProgressUserControl : UserControl
+    public partial class ProgressUserControl : UserControl, IRefreshable
     {
 
         List<string> StatusOptions = new List<string>();
@@ -156,6 +157,10 @@ namespace OrderManagementApp
             }
         }
 
+        public void RefreshData()
+        {
+           
+        }
 
     }
 

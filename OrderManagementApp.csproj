@@ -125,6 +125,12 @@
     <Compile Include="PurchaseUserControl.Designer.cs">
       <DependentUpon>PurchaseUserControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="ReportsUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ReportsUserControl.Designer.cs">
+      <DependentUpon>ReportsUserControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Settings_CustomerUserControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
