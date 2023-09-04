@@ -91,9 +91,6 @@
             this.listbox_usertype.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.listbox_usertype.FormattingEnabled = true;
             this.listbox_usertype.ItemHeight = 27;
-            this.listbox_usertype.Items.AddRange(new object[] {
-            "normal user",
-            "admin user"});
             this.listbox_usertype.Location = new System.Drawing.Point(229, 228);
             this.listbox_usertype.Name = "listbox_usertype";
             this.listbox_usertype.Size = new System.Drawing.Size(307, 31);
@@ -164,7 +161,6 @@
             this.Name = "create_user";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "create_user";
-            this.Load += new System.EventHandler(this.create_user_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

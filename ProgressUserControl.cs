@@ -2,51 +2,50 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Security.Cryptography;
+using System.Text.Json;
 using System.Windows.Forms;
+using System.Xml.Linq;
 using static OrderManagementApp.MasterPage;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace OrderManagementApp
 {
     public partial class ProgressUserControl : UserControl, IRefreshable
     {
 
-        List<string> StatusOptions = new List<string>();
-
+        List<string> ProcessNames = new List<string>();
+        List<ProcessClass> processes = new List<ProcessClass>();
+        BindingList<string> StatusProcessSteps = new BindingList<string>();
+        BindingList<string> FilterProcessSteps = new BindingList<string>();
+        BindingList<ProgressDataGridItems> dataItems = new BindingList<ProgressDataGridItems>();
         public ProgressUserControl()
         {
             InitializeComponent();
             InitializeDatagrid();
-            GetStatusOptions("album.json");
+            LoadNeccessaryData();
         }
-
-        private void GetStatusOptions(string OptionType)
+        private void LoadNeccessaryData()
         {
-            string filePath = OptionType;// CodeConfig.ProcessOptionTypes;
-
-            // Check if the file exists before reading
-            if (File.Exists(filePath))
+            processes = Utils.ReadProcesses();
+            ProcessNames = processes.Select(obj => obj.Name).ToList();
+            combo_processes.DataSource = ProcessNames;
+            combo_processes.SelectedIndex = 0;
+            FilterProcessSteps.Clear();
+            foreach (var step in processes.FirstOrDefault(obj => obj.Name == ProcessNames[0]).Steps)
             {
-                string[] lines = File.ReadAllLines(filePath);
+                FilterProcessSteps.Add(step);
+            }
+            ReadProcessProgress(ProcessNames[0], "all");
 
-                foreach (string line in lines)
-                {
-                    StatusOptions.Add(line); 
-                }
-            }
-            else
-            {
-                MessageBox.Show("Create Process first");
-            }
         }
-
+     
         private void InitializeDatagrid()
         {
-
             // Set up DataGridView properties
             dataGridView1.Dock = DockStyle.Fill;
             dataGridView1.AutoGenerateColumns = false;
@@ -71,22 +70,25 @@ namespace OrderManagementApp
             colDis.Name = "Description";
             colDis.ReadOnly = true;
 
-            DataGridViewProgressBarColumn colProgress = new DataGridViewProgressBarColumn();
+            DataGridViewTextBoxColumn colProcessType = new DataGridViewTextBoxColumn();
+            colProcessType.HeaderText = "Process Type";
+            colProcessType.DataPropertyName = "Process_Type";
+            colProcessType.ReadOnly = true;
+
+            //DataGridViewProgressBarColumn colProgress = new DataGridViewProgressBarColumn();
+            DataGridViewProgressColumn colProgress = new DataGridViewProgressColumn();
             colProgress.HeaderText = "Progress";
             colProgress.DataPropertyName = "Progress";
             colProgress.ReadOnly = true;
 
-            DataGridViewComboBoxColumn colOptions = new DataGridViewComboBoxColumn();
-            colOptions.HeaderText = "Status";
-            colOptions.DataPropertyName = "Status";
-            colOptions.Name = "Status";
-            //colOptions.Items.AddRange("print", "binding", "completed");
-            colOptions.DataSource = StatusOptions;
-            colOptions.AutoComplete = true;
-
-           
-
-
+            DataGridViewComboBoxColumn colStatus = new DataGridViewComboBoxColumn();
+            colStatus.HeaderText = "Status";
+            colStatus.DataPropertyName = "Status";
+            colStatus.Name = "Status";
+            //colStatus.Items.AddRange("order placed","print", "binding", "completed");
+            colStatus.DataSource = StatusProcessSteps;
+            colStatus.AutoComplete = true;
+          
             DataGridViewButtonColumn colUpdate = new DataGridViewButtonColumn();
             colUpdate.HeaderText = "Update";
             colUpdate.Text = "Update";
@@ -98,44 +100,11 @@ namespace OrderManagementApp
             dataGridView1.Columns.Add(colID);
             dataGridView1.Columns.Add(colName);
             dataGridView1.Columns.Add(colDis);
+            dataGridView1.Columns.Add(colProcessType);
             dataGridView1.Columns.Add(colProgress);
-            dataGridView1.Columns.Add(colOptions);
+            dataGridView1.Columns.Add(colStatus);
             dataGridView1.Columns.Add(colUpdate);
-
-            List<ProgressDataGridItems> dataItems = new List<ProgressDataGridItems>
-            {
-                new ProgressDataGridItems { OrderID = 1, Name = "Item 1",Description="Demo" ,Options = "print", Progress = 25, Status = "printing"},
-                new ProgressDataGridItems { OrderID = 2, Name = "Item 2",Description="Demo" ,Options = "print",Progress = 75,Status = "printing" },
-                new ProgressDataGridItems { OrderID = 3, Name = "Item 3",Description="Demo" , Options = "print",Progress = 50,Status = "printing" },
-                // Add more data items as needed
-                new ProgressDataGridItems { OrderID = 1, Name = "Item 1",Description="Demo" ,Options = "print", Progress = 25, Status = "printing"},
-                new ProgressDataGridItems { OrderID = 2, Name = "Item 2",Description="Demo" ,Options = "print",Progress = 75,Status = "printing" },
-                new ProgressDataGridItems { OrderID = 3, Name = "Item 3",Description="Demo" , Options = "print",Progress = 50,Status = "printing" },
-
-                new ProgressDataGridItems { OrderID = 1, Name = "Item 1",Description="Demo" ,Options = "print", Progress = 25, Status = "printing"},
-                new ProgressDataGridItems { OrderID = 2, Name = "Item 2",Description="Demo" ,Options = "print",Progress = 75,Status = "printing" },
-                new ProgressDataGridItems { OrderID = 3, Name = "Item 3",Description="Demo" , Options = "print",Progress = 50,Status = "printing" },
-
-                new ProgressDataGridItems { OrderID = 1, Name = "Item 1",Description="Demo" ,Options = "print", Progress = 25, Status = "printing"},
-                new ProgressDataGridItems { OrderID = 2, Name = "Item 2",Description="Demo" ,Options = "print",Progress = 75,Status = "printing" },
-                new ProgressDataGridItems { OrderID = 3, Name = "Item 3",Description="Demo" , Options = "print",Progress = 50,Status = "printing" },
-
-                new ProgressDataGridItems { OrderID = 1, Name = "Item 1",Description="Demo" ,Options = "print", Progress = 25, Status = "printing"},
-                new ProgressDataGridItems { OrderID = 2, Name = "Item 2",Description="Demo" ,Options = "print",Progress = 75,Status = "printing" },
-                new ProgressDataGridItems { OrderID = 3, Name = "Item 3",Description="Demo" , Options = "print",Progress = 50,Status = "printing" },
-
-                new ProgressDataGridItems { OrderID = 1, Name = "Item 1",Description="Demo" ,Options = "print", Progress = 25, Status = "printing"},
-                new ProgressDataGridItems { OrderID = 2, Name = "Item 2",Description="Demo" ,Options = "print",Progress = 75,Status = "printing" },
-                new ProgressDataGridItems { OrderID = 3, Name = "Item 3",Description="Demo" , Options = "print",Progress = 50,Status = "printing" },
-                new ProgressDataGridItems { OrderID = 1, Name = "Item 1",Description="Demo" ,Options = "print", Progress = 25, Status = "printing"},
-                new ProgressDataGridItems { OrderID = 2, Name = "Item 2",Description="Demo" ,Options = "print",Progress = 75,Status = "printing" },
-                new ProgressDataGridItems { OrderID = 3, Name = "Item 3",Description="Demo" , Options = "print",Progress = 50,Status = "printing" },
-
-
-
-            };
-            dataGridView1.DataSource = dataItems;
-
+           
         }
 
         private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -147,64 +116,163 @@ namespace OrderManagementApp
                 if (buttonCell != null && buttonCell.Value.ToString() == "Update")
                 {
                     // Get the selected values  
-                    int rowID = Convert.ToInt32(dataGridView1.Rows[e.RowIndex].Cells["OrderID"].Value);
+                    string OrderId = dataGridView1.Rows[e.RowIndex].Cells["OrderID"].Value.ToString();
                     string selectedOption = dataGridView1.Rows[e.RowIndex].Cells["Status"].Value.ToString();
 
                     // Perform update logic here
                     // For demonstration, we just show a message
-                    MessageBox.Show($"Updating Row ID: {rowID} with Option: {selectedOption}");
+                    Utils.UpdateOrderStatus(OrderId, selectedOption); 
+                    MessageBox.Show($"Order status update succesfull");
+                    LoadNeccessaryData();
                 }
+                
             }
         }
 
         public void RefreshData()
         {
-           
+            LoadNeccessaryData();
         }
 
+        private void combo_processes_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            FilterProcessSteps.Clear();
+            StatusProcessSteps.Clear();
+            string processName = combo_processes.SelectedItem.ToString();
+            foreach (var step in processes.FirstOrDefault(obj => obj.Name == processName).Steps)
+            {
+                FilterProcessSteps.Add(step);
+                StatusProcessSteps.Add(step);
+            }
+            List<string> filter_list = new List<string>();
+            filter_list = processes.Find(obj => obj.Name == processName).Steps;
+            filter_list.Insert(0, "All");
+            combo_filters.DataSource = filter_list;
+            combo_filters.SelectedIndex = 0;
+
+        }
+
+        private void ReadProcessProgress(string processName,string StageName)
+        {
+            List<string> filtered_orders = new List<string>();
+            if (StageName.ToLower() == "all")
+            {
+                StageName = string.Empty;
+            }
+
+            var OrderProcessData = Utils.ReadOrderProcessData();
+            foreach (var order in OrderProcessData.Keys)
+            {
+                Tuple<string, string> values = OrderProcessData[order];
+                if (values.Item1.Contains(processName) && values.Item2.Contains(StageName))
+                {
+                    filtered_orders.Add(order);
+                }
+            }
+            DisplaySeletedOrders(filtered_orders);
+
+        }
+
+        private void DisplaySeletedOrders(List<string> orders)
+        {
+            dataItems.Clear();
+            foreach (var order in orders)
+            {
+                string order_path = Path.Combine(CodeConfig.DataStorageFolder, CodeConfig.OrdersPath, order + ".json");
+                if (File.Exists(order_path))
+                {
+                    string jsonString = File.ReadAllText(order_path);
+                    Order order_item = JsonSerializer.Deserialize<Order>(jsonString);
+                    //string name = s = String.Format("{}-{}", order_item.C);
+                    var Customer = Utils.GetCustomerDataFromID(order_item.CustomerId);
+                    string name = String.Format("{0}-{1}", Customer.Name, Customer.StudioName);
+                    var all_stages = Utils.GetStagesOftheProcess(order_item.ProcessType);
+                    string Current_Stage = order_item.StatusProgress.Last();
+                    int progress_percent = (all_stages.IndexOf(Current_Stage) + 1) * 100 / all_stages.Count;
+                    dataItems.Add(new ProgressDataGridItems { OrderID = order_item.ID, Name = name, Description = order_item.Comments, Process_Type = order_item.ProcessType, Progress = progress_percent, Status = Current_Stage });
+
+                }
+            }
+            dataGridView1.DataSource = dataItems;
+            //dataGridView1.Refresh();
+        }
+
+        private void btn_apply_filter_Click(object sender, EventArgs e)
+        {
+            ReadProcessProgress(combo_processes.SelectedItem.ToString(), combo_filters.SelectedItem.ToString());
+        }
+
+        private void dataGridView1_DataError(object sender, DataGridViewDataErrorEventArgs e)
+        {
+            MessageBox.Show(e.Exception.ToString());
+        }
     }
 
 
     // Custom DataGridViewColumn for ProgressBar
-    public class DataGridViewProgressBarColumn : DataGridViewColumn
+    public class DataGridViewProgressColumn : DataGridViewImageColumn
     {
-        public DataGridViewProgressBarColumn()
+        public DataGridViewProgressColumn()
         {
-            this.CellTemplate = new DataGridViewProgressBarCell();
+            CellTemplate = new DataGridViewProgressCell();
         }
     }
-
-
-    // Custom DataGridViewCell for ProgressBar
-    public class DataGridViewProgressBarCell : DataGridViewTextBoxCell
-    {
-        protected override void Paint(Graphics graphics, Rectangle clipBounds, Rectangle cellBounds, int rowIndex, DataGridViewElementStates cellState, object value, object formattedValue, string errorText, DataGridViewCellStyle cellStyle, DataGridViewAdvancedBorderStyle advancedBorderStyle, DataGridViewPaintParts paintParts)
-        {
-            if (value != null && value is int progressValue)
-            {
-                // Calculate the ProgressBar width based on the progress percentage
-                int progressBarWidth = (int)Math.Round((double)(cellBounds.Width - 6) * progressValue / 100);
-
-                // Draw the green ProgressBar
-                Rectangle progressBarBounds = new Rectangle(cellBounds.X + 3, cellBounds.Y + 3, progressBarWidth, cellBounds.Height - 6);
-                graphics.FillRectangle(Brushes.LightGreen, progressBarBounds);
-
-                // Draw the ProgressBar border
-                graphics.DrawRectangle(Pens.Black, cellBounds.X + 2, cellBounds.Y + 2, cellBounds.Width - 5, cellBounds.Height - 5);
-
-                // Draw the percentage text
-                string progressText = progressValue.ToString() + "%";
-                SizeF textSize = graphics.MeasureString(progressText, cellStyle.Font);
-                Point textLocation = new Point(cellBounds.X + (cellBounds.Width - (int)textSize.Width) / 2, cellBounds.Y + (cellBounds.Height - (int)textSize.Height) / 2);
-                graphics.DrawString(progressText, cellStyle.Font, Brushes.Black, textLocation);
-            }
-            else
-            {
-                base.Paint(graphics, clipBounds, cellBounds, rowIndex, cellState, value, formattedValue, errorText, cellStyle, advancedBorderStyle, paintParts);
-            }
-        }
-    }
-
   
+    // Custom DataGridViewCell for ProgressBar
+    class DataGridViewProgressCell : DataGridViewImageCell
+    {
+        // Used to make custom cell consistent with a DataGridViewImageCell
+        static Image emptyImage;
+        static DataGridViewProgressCell()
+        {
+            emptyImage = new Bitmap(1, 1, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+        }
+        public DataGridViewProgressCell()
+        {
+            this.ValueType = typeof(int);
+        }
+        // Method required to make the Progress Cell consistent with the default Image Cell. 
+        // The default Image Cell assumes an Image as a value, although the value of the Progress Cell is an int.
+        protected override object GetFormattedValue(object value,
+                            int rowIndex, ref DataGridViewCellStyle cellStyle,
+                            TypeConverter valueTypeConverter,
+                            TypeConverter formattedValueTypeConverter,
+                            DataGridViewDataErrorContexts context)
+        {
+            return emptyImage;
+        }
+        protected override void Paint(System.Drawing.Graphics g, System.Drawing.Rectangle clipBounds, System.Drawing.Rectangle cellBounds, int rowIndex, DataGridViewElementStates cellState, object value, object formattedValue, string errorText, DataGridViewCellStyle cellStyle, DataGridViewAdvancedBorderStyle advancedBorderStyle, DataGridViewPaintParts paintParts)
+        {
+            try
+            {
+                int progressVal = (int)value;
+                float percentage = ((float)progressVal / 100.0f); // Need to convert to float before division; otherwise C# returns int which is 0 for anything but 100%.
+                Brush backColorBrush = new SolidBrush(cellStyle.BackColor);
+                Brush foreColorBrush = new SolidBrush(cellStyle.ForeColor);
+                // Draws the cell grid
+                base.Paint(g, clipBounds, cellBounds,
+                 rowIndex, cellState, value, formattedValue, errorText,
+                 cellStyle, advancedBorderStyle, (paintParts & ~DataGridViewPaintParts.ContentForeground));
+                if (percentage > 0.0)
+                {
+                    // Draw the progress bar and the text
+                    g.FillRectangle(new SolidBrush(Color.FromArgb(203, 235, 108)), cellBounds.X + 2, cellBounds.Y + 2, Convert.ToInt32((percentage * cellBounds.Width - 4)), cellBounds.Height - 4);
+                    g.DrawString(progressVal.ToString() + "%", cellStyle.Font, foreColorBrush, cellBounds.X + (cellBounds.Width / 2) - 5, cellBounds.Y + 2);
 
+                }
+                else
+                {
+                    // draw the text
+                    if (this.DataGridView.CurrentRow.Index == rowIndex)
+                        g.DrawString(progressVal.ToString() + "%", cellStyle.Font, new SolidBrush(cellStyle.SelectionForeColor), cellBounds.X + 6, cellBounds.Y + 2);
+                    else
+                        g.DrawString(progressVal.ToString() + "%", cellStyle.Font, foreColorBrush, cellBounds.X + 6, cellBounds.Y + 2);
+                }
+            }
+            catch (Exception e) { }
+
+        }
+    }
+
+ 
 }

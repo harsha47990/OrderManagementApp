@@ -8,11 +8,12 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static OrderManagementApp.MasterPage;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace OrderManagementApp
 {
-    public partial class Settings_CustomerUserControl : UserControl
+    public partial class Settings_CustomerUserControl : UserControl, IRefreshable
     {
         Dictionary<string,double> custom_price_dict = new Dictionary<string,double>();
         
@@ -36,6 +37,10 @@ namespace OrderManagementApp
           
             combobox_group.Items.Add(CodeConfig.string_Studio);
             combobox_group.Items.Add(CodeConfig.string_Amature);
+            combobox_group.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+            combobox_group.AutoCompleteSource = AutoCompleteSource.CustomSource; 
+            combobox_group.AutoCompleteCustomSource = new AutoCompleteStringCollection{ CodeConfig.string_Studio, CodeConfig.string_Amature };
+            
             searcby_dict = new Dictionary<string, string>
             {
                 { "Customer Name", "Name" },
@@ -45,16 +50,15 @@ namespace OrderManagementApp
 
 
             combo_searchby.DataSource = searcby_dict.Keys.ToArray(); // searchby_list.ToArray();
-
             combo_searchby.SelectedIndex = 0;
             RefreshData();
         }
 
-        private void RefreshData()
+        public void RefreshData()
         {
             EnableDisableCustomPrice(false);
-            products = Utils.LoadProducts();
-            customers = Utils.LoadCustomers();
+            products = Utils.ReadProducts();
+            customers = Utils.ReadCustomers();
         }
      
         private bool validateData()
@@ -228,5 +232,6 @@ namespace OrderManagementApp
                 view_btn.PerformClick();
             }
         }
+
     }
 }

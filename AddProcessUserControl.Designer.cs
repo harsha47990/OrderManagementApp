@@ -196,7 +196,6 @@
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "AddProcessUserControl";
             this.Size = new System.Drawing.Size(970, 587);
-            this.Load += new System.EventHandler(this.ProcessManagementUserControl_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewSteps)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

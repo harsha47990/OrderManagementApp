@@ -1,1 +1,1 @@
-[{"Name":"harsha","Steps":["printing","completed","delivered"]},{"Name":"album","Steps":["order placed","working","printing","binding","completed","delivered"]}]
+[{"Name":"album","Steps":["order placed","working","filter\u0026cropping","printing","binding","completed","delivered"]},{"Name":"Normal Print","Steps":["order placed","printing","completed","delivered"]},{"Name":"Work Print","Steps":["order placed","working","printing","completed","delivered"]}]

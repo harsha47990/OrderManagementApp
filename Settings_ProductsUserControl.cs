@@ -65,7 +65,7 @@ namespace OrderManagementApp
 
         private void LoadNecessaryDetails()
         {
-            products = Utils.LoadProducts();
+            products = Utils.ReadProducts();
 
         }
 

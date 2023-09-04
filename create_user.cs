@@ -20,6 +20,9 @@ namespace OrderManagementApp
         {
             first_time = firsttime;
             InitializeComponent();
+            listbox_usertype.Items.Add("normal user");
+            listbox_usertype.Items.Add("admin user");
+
             if (firsttime)
             {
                 listbox_usertype.SelectedIndex = 1;
@@ -31,11 +34,6 @@ namespace OrderManagementApp
             }
         }
 
-
-        private void create_user_Load(object sender, EventArgs e)
-        {
-
-        }
 
         private void button_save_Click(object sender, EventArgs e)
         {
@@ -54,9 +52,9 @@ namespace OrderManagementApp
             List<UserDetails> users;
 
             //if the JSON file exists
-            if (File.Exists(CodeConfig.jsonFilePath))
+            if (File.Exists(Path.Combine(CodeConfig.DataStorageFolder, CodeConfig.LoginDetailsJsonFilePath)))
             {
-                string jsonString = File.ReadAllText(CodeConfig.jsonFilePath);
+                string jsonString = File.ReadAllText(Path.Combine(CodeConfig.DataStorageFolder, CodeConfig.LoginDetailsJsonFilePath));
                 users = JsonSerializer.Deserialize<List<UserDetails>>(jsonString);
                 foreach (UserDetails user in users)
                 {
@@ -88,7 +86,7 @@ namespace OrderManagementApp
             });
 
             // Save the JSON string to a file
-            File.WriteAllText(CodeConfig.jsonFilePath, json_string);
+            File.WriteAllText(Path.Combine(CodeConfig.DataStorageFolder, CodeConfig.LoginDetailsJsonFilePath), json_string);
 
             MessageBox.Show("Account created!!!");
             this.Hide();
@@ -98,6 +96,10 @@ namespace OrderManagementApp
         private bool verify_admin_type()
         { 
             if (listbox_usertype.SelectedIndex == CodeConfig.user_type_normal_index) {
+                return true;
+            }
+            else if(first_time || CodeConfig.admin_login)
+            {
                 return true;
             }
             else

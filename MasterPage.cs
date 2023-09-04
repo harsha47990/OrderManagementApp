@@ -3,8 +3,12 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -46,7 +50,7 @@ namespace OrderManagementApp
             // Show the form
             f1.Show();
         }
-
+        
         private void tabcontrol_SelectedIndexChanged(object sender, EventArgs e)
         {
             TabControl tabControl = (TabControl)sender;
@@ -73,6 +77,16 @@ namespace OrderManagementApp
         public interface IRefreshable
         {
             void RefreshData();
+        }
+
+        private void setting_subtab_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            tabcontrol_SelectedIndexChanged(sender, e);
+        }
+
+        private void MasterPage_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            Application.Exit();
         }
     }
 

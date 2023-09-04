@@ -37,21 +37,20 @@ namespace OrderManagementApp
             customerNameAutoComplete = new AutoCompleteStringCollection();
             OrderItemsAutoComplete = new AutoCompleteStringCollection();
 
-            txtAvailableItems.AutoCompleteMode = AutoCompleteMode.Suggest;
+            txtAvailableItems.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
             txtAvailableItems.AutoCompleteSource = AutoCompleteSource.CustomSource;
             txtAvailableItems.AutoCompleteCustomSource = OrderItemsAutoComplete;
 
-            textBoxCustomerName.AutoCompleteMode = AutoCompleteMode.Suggest;
+            textBoxCustomerName.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
             textBoxCustomerName.AutoCompleteSource = AutoCompleteSource.CustomSource;
             textBoxCustomerName.AutoCompleteCustomSource = customerNameAutoComplete;
             combo_paymenttype.Items.AddRange(CodeConfig.PaymentTypes.ToArray());
            
             dataGridViewOrderItems.DataSource = orderItems;
             dataGridViewOrderItems.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            processes = Utils.ReadProcesses();
-            combobox_process_type.Items.AddRange(processes.Select(obj => obj.Name).ToArray());
-            CleanAll();
+
             RefreshData();
+            CleanAll();
         }
 
         private void CleanAll()
@@ -60,8 +59,16 @@ namespace OrderManagementApp
             txt_total_amount.Text = "0";
             txt_amountPaid.Text = "0";
             textBoxCustomerName.Text = String.Empty;
-            combo_customer_type.SelectedIndex = 0;
-            combobox_process_type.SelectedIndex= 0;
+            try
+            {
+                combo_customer_type.SelectedIndex = 0;
+                combobox_process_type.SelectedIndex = 0;
+            }
+            catch
+            {
+                combo_customer_type.SelectedIndex = -1;
+                combobox_process_type.SelectedIndex = -1;
+            }
             txt_comments.Text = String.Empty;
             textBoxPrice.Text = String.Empty;
             numericUpDownQuantity.Value = 1;
@@ -72,7 +79,7 @@ namespace OrderManagementApp
         {
             // Initialize the list of available items (you can load this from a database or other sources)
             
-            availableItems = Utils.LoadProducts().FindAll(obj => obj.Group == combo_customer_type.Text);
+            availableItems = Utils.ReadProducts().FindAll(obj => obj.Group == combo_customer_type.Text);
             SetOrderItemsAutoComplete(availableItems);
             comboBoxAvailableItems.DataSource = availableItems;
             comboBoxAvailableItems.SelectedIndex = -1;
@@ -146,7 +153,10 @@ namespace OrderManagementApp
             order_item.TotalAmount = Convert.ToDouble(txt_total_amount.Text);
             order_item.Due = order_item.TotalAmount - Convert.ToDouble(txt_amountPaid.Text);
             order_item.PaymentType = combo_paymenttype.SelectedItem.ToString();
-            Utils.SaveOrderDetails(order_item);
+            string starting_step = Utils.ReadProcesses().Find(obj => obj.Name == order_item.ProcessType).Steps[0];
+            order_item.StatusProgress = new List<string> { starting_step };
+            order_item.DateTimeProgress = new List<string> {DateTime.Now.ToString()};
+            Utils.SaveNewOrder(order_item);
             CleanAll();
         }
 
@@ -210,9 +220,12 @@ namespace OrderManagementApp
         public void RefreshData()
         {
             custom_price_dict = new Dictionary<string, double>();
-            customers = Utils.LoadCustomers();
+            customers = Utils.ReadCustomers();
             CustomerNames = customers.Select(obj => obj.Name + "," + obj.CustomerType + ',' + obj.StudioName + "," + obj.Address + "," + obj.MobileNo).ToList();
             SetCustomerNamesAutoComplete(CustomerNames);
+            combobox_process_type.Items.Clear();
+            processes = Utils.ReadProcesses();
+            combobox_process_type.Items.AddRange(processes.Select(obj => obj.Name).ToArray());
         }
     }
 

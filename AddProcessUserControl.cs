@@ -10,11 +10,12 @@ using System.Security.Cryptography;
 using System.Text.Json;
 using System.Windows.Forms;
 using static OrderManagementApp.Login;
+using static OrderManagementApp.MasterPage;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace OrderManagementApp
 {
-    public partial class AddProcessUserControl : UserControl
+    public partial class AddProcessUserControl : UserControl, IRefreshable
     {
         private List<string> ProcessNames = new List<string>();
         Dictionary<string, List<string>> ProcessSteps = new Dictionary<string, List<string>>();
@@ -24,14 +25,16 @@ namespace OrderManagementApp
         {
             InitializeComponent();
 
-            // Set the UserControl to dock as Fill and set the background color to white
             Dock = DockStyle.Fill;
             BackColor = Color.White;
             InitializeDataGridView();
             stepsTable.Columns.Add("Steps", typeof(string));
 
         }
-
+        public void RefreshData()
+        {
+            ReadProcesses();
+        }
         private void InitializeDataGridView()
         {
 
@@ -79,8 +82,10 @@ namespace OrderManagementApp
         }
         private void ReadProcesses()
         {
+            ProcessNames.Clear();
+            ProcessSteps.Clear();
             List<ProcessClass> processes = Utils.ReadProcesses();
-            if (processes != null)
+            if (processes.Count > 0)
             {
                 foreach (ProcessClass process in processes)
                 {
@@ -97,9 +102,6 @@ namespace OrderManagementApp
                 MessageBox.Show("Create Process first");
             }
         }
-        private void ProcessManagementUserControl_Load(object sender, EventArgs e)
-        {  ReadProcesses(); }
-
         private void btnEditProcess_Click(object sender, EventArgs e)
         {
             txtProcessName.Text = combobox_processes.SelectedItem.ToString();
@@ -190,9 +192,7 @@ namespace OrderManagementApp
             {
                 SaveProcesses.Add(new ProcessClass(process.Key, process.Value));
             }
-
-            string Data = JsonSerializer.Serialize<List<ProcessClass>>(SaveProcesses);
-            File.WriteAllText(CodeConfig.process_json_path, Data);
+            Utils.SaveProcessData(SaveProcesses);
         }
         private void btnSave_Click(object sender, EventArgs e)
         {

@@ -1,5 +1,10 @@
 [
   {
+    "username": "admin",
+    "password": "admin",
+    "user_type": "admin user"
+  },
+  {
     "username": "harsha",
     "password": "harsha",
     "user_type": "admin user"

@@ -21,14 +21,7 @@ namespace OrderManagementApp
         public Login()
         {
             InitializeComponent();
-            MasterPage mf = new MasterPage();
-            //Form1 mf =      new Form1();
-            mf.ShowDialog();    
-        }
-
-        private void button_login_Click(object sender, EventArgs e)
-        {
-            string jsonFilePath = CodeConfig.jsonFilePath;
+            string jsonFilePath = Path.Combine(CodeConfig.DataStorageFolder, CodeConfig.LoginDetailsJsonFilePath);
 
             // Check if the JSON file exists
             if (!File.Exists(jsonFilePath))
@@ -37,15 +30,15 @@ namespace OrderManagementApp
                 create_user cu = new create_user(true);
                 cu.ShowDialog();
             }
-            try
-            {
-                // Read the entire JSON file as a string
-                string jsonString = File.ReadAllText(jsonFilePath);
 
-                // Deserialize the JSON string to a strongly-typed object
+            //MasterPage mf = new MasterPage();
+            //mf.ShowDialog();    
+        }
 
-                List<UserDetails> users = JsonSerializer.Deserialize<List<UserDetails>>(jsonString);
-
+        private void button_login_Click(object sender, EventArgs e)
+        {
+           
+                List<UserDetails> users = Utils.ReadUsersData();
                 foreach (UserDetails user in users)
                 {
                     if (user.username == textbox_username.Text.ToLower())
@@ -64,10 +57,10 @@ namespace OrderManagementApp
                             {
                                 CodeConfig.admin_login = false;
                             }
-                            //this.Close();
-                            //Form1 f1 = new Form1(); 
-                           // f1.ShowDialog();    
-                           // return;
+                            this.Hide();
+                            MasterPage master = new MasterPage(); 
+                            master.Show();
+                            return;
                         }
                         else
                         {
@@ -77,12 +70,8 @@ namespace OrderManagementApp
                     }
                 }
 
-                MessageBox.Show("user details failed");
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error reading or parsing the JSON file: " + ex.Message);
-            }
+                MessageBox.Show("user details not found");
+            
 
         }
 
@@ -95,7 +84,7 @@ namespace OrderManagementApp
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            if (!File.Exists(CodeConfig.jsonFilePath))
+            if (!File.Exists(Path.Combine(CodeConfig.DataStorageFolder, CodeConfig.LoginDetailsJsonFilePath)))
             {
                 MessageBox.Show("create admin user account");
                 create_user cu = new create_user(true);
